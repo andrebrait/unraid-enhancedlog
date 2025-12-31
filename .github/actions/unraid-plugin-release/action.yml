@@ -1,0 +1,250 @@
+name: "Release Unraid Plugin"
+description: "Builds and releases an Unraid plugin from a GitHub repository."
+inputs:
+  plugin_version:
+    description: "Version of the Unraid plugin"
+    required: false
+    default: "${{ github.event.release.name }}"
+  github_token:
+    description: "GitHub token for authentication"
+    required: true
+  plg_branch:
+    description: "Branch to use for the templated plugin file"
+    required: true
+    default: "main"
+  upload_url:
+    description: "URL to upload the release assets"
+    required: false
+    default: "${{ github.event.release.upload_url }}"
+  composer_dir:
+    description: "Directory containing the composer.json file"
+    required: false
+    default: ""
+  php_extensions:
+    description: "PHP extensions to install"
+    required: false
+    default: ""
+  go_dir:
+    description: "Directory containing the Go application to build"
+    required: false
+    default: ""
+  build_script:
+    description: "Custom script to run before building the package"
+    required: false
+    default: ""
+  changelog_releases:
+    description: "Number of releases to include in the plugin changelog"
+    required: false
+    default: 3
+  build_prereleases:
+    description: "Whether to build pre-releases"
+    required: false
+    default: "false"
+  build_package:
+    description: "Whether to build the slackware package"
+    required: false
+    default: "true"
+  ssh_key:
+    description: "SSH key for bypassing rulesets"
+    required: false
+    default: ""
+outputs:
+  committed:
+    description: "Whether the action has created a commit ('true' or 'false')"
+    value: ${{ steps.commit_plugin_files.outputs.committed }}
+  commit_sha:
+    description: "The short 7-character SHA of the commit that has just been created"
+    value: ${{ steps.commit_plugin_files.outputs.commit_sha }}
+  commit_long_sha:
+    description: "The SHA of the commit that has just been created"
+    value: ${{ steps.commit_plugin_files.outputs.commit_long_sha }}
+
+branding:
+  icon: "package"
+  color: "orange"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check if release is a draft
+      if: github.event.release.draft
+      run: |
+        echo "This action does not support draft releases."
+        exit 1
+      shell: bash
+
+    - name: Check if release is a pre-release
+      if: github.event.release.prerelease && ( inputs.build_prereleases != 'true' )
+      run: |
+        echo "This action does not support pre-releases unless 'build_prereleases' is set to true."
+        exit 1
+      shell: bash
+
+    - uses: actions/checkout@v3
+      with:
+        path: tag
+        token: ${{ inputs.github_token }}
+        submodules: recursive
+      if: inputs.ssh_key == ''
+
+    - uses: actions/checkout@v3
+      with:
+        path: main
+        ref: ${{ inputs.plg_branch }}
+        token: ${{ inputs.github_token }}
+      if: inputs.ssh_key == ''
+
+    - uses: actions/checkout@v3
+      with:
+        path: tag
+        ssh-key: ${{ inputs.ssh_key }}
+        submodules: recursive
+      if: inputs.ssh_key != ''
+
+    - uses: actions/checkout@v3
+      with:
+        path: main
+        ref: ${{ inputs.plg_branch }}
+        ssh-key: ${{ inputs.ssh_key }}
+      if: inputs.ssh_key != ''
+
+    - name: Load plugin configuration
+      run: |
+        cd ${{ github.workspace }}/tag/plugin
+        echo "PLUGIN_JSON=$(jq -c . < plugin.json)" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Set global variables
+      id: globals
+      run: |
+        echo "package_file=${{ fromJson(env.PLUGIN_JSON).package_name }}-${{ inputs.plugin_version }}-noarch-1.txz" >> $GITHUB_OUTPUT
+        echo "package_name=${{ fromJson(env.PLUGIN_JSON).package_name }}" >> $GITHUB_OUTPUT
+        echo "name=${{ fromJson(env.PLUGIN_JSON).name }}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Get previous releases
+      id: get_previous_releases
+      run: |
+        cd ${{ github.workspace }}
+        echo "" > changelog.md
+
+        previous_releases=$(gh release list --exclude-drafts --repo ${{ github.repository }} --limit ${{ inputs.changelog_releases }} | awk '{print $1}')
+        for release in $previous_releases; do
+          release_info=$(gh release view $release --repo ${{ github.repository }} --json name,body)
+          version=$(echo $release_info | jq -r '.name')
+          description=$(echo $release_info | jq -r '.body')
+
+          printf "### %s\n\n%s\n\n" "$version" "$description" >> changelog.md
+        done
+
+        echo "formatted_releases<<ENVEOFENF" >> $GITHUB_OUTPUT
+        cat changelog.md >> $GITHUB_OUTPUT
+        echo "ENVEOFENF" >> $GITHUB_OUTPUT
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+
+    # Check to see if github.event.release.assets already has a release package
+    # If it does, skip the build step and save the SHA256 checksum to the output for the plugin file
+    - name: Check for existing release package
+      id: check_existing_package
+      run: |
+        cd ${{ github.workspace }}/tag
+        reldata=$(gh release view ${{ github.event.release.tag_name }} --json assets --jq '.assets[] | select(.name == "${{ steps.globals.outputs.package_file }}")')
+        cd ${{ github.workspace }}
+
+        if [[ -n $reldata ]]; then
+          echo "Package already exists, skipping build."
+          dlUrl=$(echo "$reldata" | jq -r '.url')
+          curl -L -o checksum.txz "$dlUrl"
+          checksum=$(sha256sum checksum.txz | awk '{print $1}')
+
+          echo "checksum=$checksum" >> $GITHUB_OUTPUT
+          echo "skip_build=true" >> $GITHUB_OUTPUT
+        else
+          echo "skip_build=false" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+      if: inputs.build_package == 'true'
+
+    - name: Install Composer dependencies
+      uses: "php-actions/composer@v6"
+      with:
+        dev: no
+        working_dir: tag/${{ inputs.composer_dir }}
+        php_extensions: ${{ inputs.php_extensions }}
+      if: inputs.composer_dir != '' && inputs.build_package == 'true' && steps.check_existing_package.outputs.skip_build != 'true'
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: tag/${{ inputs.go_dir }}/go.mod
+        cache-dependency-path: tag/${{ inputs.go_dir }}/go.sum
+      if: inputs.go_dir != '' && inputs.build_package == 'true' && steps.check_existing_package.outputs.skip_build != 'true'
+
+    - name: Run custom build script
+      run: |
+        cd ${{ github.workspace }}/tag
+        ${{ inputs.build_script }}
+      shell: bash
+      if: inputs.build_script != '' && inputs.build_package == 'true' && steps.check_existing_package.outputs.skip_build != 'true'
+
+    - name: Build package
+      id: build_files
+      run: |
+        mkdir release
+        cd ${{ github.workspace }}/tag/src
+        tar --owner=0 --group=0 -cJf ../../release/${{ steps.globals.outputs.package_file }} *
+        cd ${{ github.workspace }}/release
+        sha256sum ${{ steps.globals.outputs.package_file }} | awk '{print $1}' > ${{ steps.globals.outputs.package_file }}.sha256
+        echo "checksum=$(cat ${{ steps.globals.outputs.package_file }}.sha256)" >> $GITHUB_OUTPUT
+      shell: bash
+      if: steps.check_existing_package.outputs.skip_build != 'true' && inputs.build_package == 'true'
+
+    - name: Upload package to release
+      uses: shogo82148/actions-upload-release-asset@v1
+      with:
+        upload_url: ${{ inputs.upload_url }}
+        asset_path: release/*
+      if: steps.check_existing_package.outputs.skip_build != 'true' && inputs.build_package == 'true'
+
+    - name: Template plugin file
+      uses: dkaser/jinja2-action@v1
+      with:
+        template: main/plugin/plugin.j2
+        output_file: main/plugin/${{ steps.globals.outputs.name }}.plg
+        data_file: main/plugin/plugin.json
+      env:
+        PLUGIN_VERSION: ${{ inputs.plugin_version }}
+        PLUGIN_CHECKSUM: ${{ steps.check_existing_package.outputs.checksum || steps.build_files.outputs.checksum }}
+        PLUGIN_CHANGELOG: ${{ steps.get_previous_releases.outputs.formatted_releases }}
+        PLUGIN_RELEASE: ""
+        PLUGIN_TAG: ${{ github.event.release.tag_name }}
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      if: github.event.release.prerelease == false
+
+    - name: Template preview plugin file
+      uses: dkaser/jinja2-action@v1
+      with:
+        template: main/plugin/plugin.j2
+        output_file: main/plugin/${{ steps.globals.outputs.name }}-preview.plg
+        data_file: main/plugin/plugin.json
+      env:
+        PLUGIN_VERSION: ${{ inputs.plugin_version }}
+        PLUGIN_CHECKSUM: ${{ steps.check_existing_package.outputs.checksum || steps.build_files.outputs.checksum }}
+        PLUGIN_CHANGELOG: ${{ steps.get_previous_releases.outputs.formatted_releases }}
+        PLUGIN_RELEASE: "-preview"
+        PLUGIN_TAG: ${{ github.event.release.tag_name }}
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      if: inputs.build_prereleases == 'true'
+
+    - name: Commit and push plugin files
+      id: commit_plugin_files
+      uses: EndBug/add-and-commit@v9
+      with:
+        default_author: github_actions
+        message: "release: update plugin files for ${{ inputs.plugin_version }}"
+        push: true
+        cwd: main/
