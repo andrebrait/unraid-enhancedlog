@@ -1,0 +1,96 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN>
+
+<PLUGIN 
+  name="enhanced.log3"
+  author="andrebrait"
+  version="2026.11.15.0000"
+  launch="Tools/EnhancedSyslog"
+  pluginURL="https://raw.githubusercontent.com/andrebrait/unraid-enhancedlog/main/plugin/enhanced.log3.plg"
+  support="https://github.com/andrebrait/unraid-enhancedlog/issues"
+  min="7.0.0"
+  
+  icon="align-left"
+>
+
+<CHANGES>
+<![CDATA[
+
+### 2026.11.15.0000
+
+- The plugin is renamed to Enhanced Log v3 so Community Applications can tell it apart from the original. Installing it replaces the old plugin and keeps your settings.
+- The plugin's author is andrebrait, and its support link opens this fork's GitHub issues.
+
+### 2026.11.13.0000
+
+- Build: releases are now produced with the andrebrait forks of the Unraid plugin release action and release drafter. No functional changes.
+
+### 2026.11.12.0000
+
+- Security: log text, sources and services are now escaped before display, so crafted syslog lines can no longer inject HTML or scripts into the Enhanced Log page.
+
+
+For older releases, see https://github.com/andrebrait/unraid-enhancedlog/releases
+]]>
+</CHANGES>
+
+<FILE Name="/boot/config/plugins/enhanced.log3/unraid-enhancedlog-2026.11.15.0000-noarch-1.txz">
+<URL>https://github.com/andrebrait/unraid-enhancedlog/releases/download/2026.11.15.0000/unraid-enhancedlog-2026.11.15.0000-noarch-1.txz</URL>
+<SHA256>4bc2dd846861d4991947300fd23c6d9aa42f59607bdd77073ac213f278ac6821</SHA256>
+</FILE>
+
+<!--
+The 'install' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+<![CDATA[
+# Replace the previous plugin of this name: keep its settings, then remove it.
+OLD=/boot/config/plugins/enhanced.log
+NEW=/boot/config/plugins/enhanced.log3
+if [ -d "$OLD" ] && ! ls -A "$NEW" | grep -qv '\.txz$'; then
+  find "$OLD" -mindepth 1 -maxdepth 1 ! -name '*.txz' -exec cp -a {} "$NEW"/ \;
+  [ -f "$NEW/enhanced.log.cfg" ] && mv "$NEW/enhanced.log.cfg" "$NEW/enhanced.log3.cfg"
+fi
+rm -f /boot/config/plugins/enhanced.log.plg /var/log/plugins/enhanced.log.plg
+rm -rf "$OLD" /usr/local/emhttp/plugins/enhanced.log
+
+upgradepkg --install-new /boot/config/plugins/enhanced.log3/unraid-enhancedlog-2026.11.15.0000-noarch-1.txz
+
+# cleanup old versions
+rm -f $(ls /boot/config/plugins/enhanced.log3/unraid-enhancedlog-*.txz 2>/dev/null | grep -v '2026.11.15.0000')
+
+echo "VERSION=2026.11.15.0000" > /usr/local/emhttp/plugins/enhanced.log3/version.ini
+
+echo ""
+echo "----------------------------------------------------"
+echo " enhanced.log3 has been installed."
+echo " Version: 2026.11.15.0000"
+echo "----------------------------------------------------"
+echo ""
+]]>
+</INLINE>
+</FILE>
+
+<!--
+The 'remove' script.
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+<![CDATA[
+removepkg unraid-enhancedlog
+
+rm -rf /usr/local/emhttp/plugins/enhanced.log3
+rm -rf /boot/config/plugins/enhanced.log3
+
+# Remove rsyslog filtering.
+rm -rf /etc/rsyslog.d/02-blocklist-extra.conf
+
+# Restart rsyslog
+echo "Restarting rsyslog..."
+/etc/rc.d/rc.rsyslogd restart >/dev/null
+]]>
+</INLINE>
+</FILE>
+
+</PLUGIN>
