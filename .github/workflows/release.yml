@@ -10,7 +10,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: dkaser/unraid-plugin-release-action@946d02c81dd87c252e5a06d18f3e74b2ecc401dc # v1.5.0
+      # Same pin as andrebrait/fanctrlplus; includes checkout v7, setup-go v6 and add-and-commit v10.
+      - uses: dkaser/unraid-plugin-release-action@dd44159f2d27c70b101db9cf76d6f11babc3e6f0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           composer_dir: "src/usr/local/php/unraid-enhancedlog/"
