@@ -4,7 +4,7 @@
 <PLUGIN 
   name="enhanced.log"
   author="Derek Kaser"
-  version="2026.11.11.0000"
+  version="2026.11.12.0000"
   launch="Tools/EnhancedSyslog"
   pluginURL="https://raw.githubusercontent.com/andrebrait/unraid-enhancedlog/main/plugin/enhanced.log.plg"
   support="https://forums.unraid.net/topic/191178-plugin-enhanced-log-advanced-syslog-viewer-for-unraid/"
@@ -16,6 +16,10 @@
 <CHANGES>
 <![CDATA[
 
+### 2026.11.12.0000
+
+- Security: log text, sources and services are now escaped before display, so crafted syslog lines can no longer inject HTML or scripts into the Enhanced Log page.
+
 ### 2026.11.11.0000
 
 - Fork: plugin, package and updates now come from https://github.com/andrebrait/unraid-enhancedlog
@@ -25,9 +29,9 @@ For older releases, see https://github.com/andrebrait/unraid-enhancedlog/release
 ]]>
 </CHANGES>
 
-<FILE Name="/boot/config/plugins/enhanced.log/unraid-enhancedlog-2026.11.11.0000-noarch-1.txz">
-<URL>https://github.com/andrebrait/unraid-enhancedlog/releases/download/2026.11.11.0000/unraid-enhancedlog-2026.11.11.0000-noarch-1.txz</URL>
-<SHA256>9ecd3f9a6ab59c711ab19dd9119192782c43392a3ffb8c171fd365b64b900ae3</SHA256>
+<FILE Name="/boot/config/plugins/enhanced.log/unraid-enhancedlog-2026.11.12.0000-noarch-1.txz">
+<URL>https://github.com/andrebrait/unraid-enhancedlog/releases/download/2026.11.12.0000/unraid-enhancedlog-2026.11.12.0000-noarch-1.txz</URL>
+<SHA256>8c546de7e306f0d44ccc4cc175407724153cae3d51662e016fbb6079913df8cb</SHA256>
 </FILE>
 
 <!--
@@ -36,17 +40,17 @@ The 'install' script.
 <FILE Run="/bin/bash">
 <INLINE>
 <![CDATA[
-upgradepkg --install-new /boot/config/plugins/enhanced.log/unraid-enhancedlog-2026.11.11.0000-noarch-1.txz
+upgradepkg --install-new /boot/config/plugins/enhanced.log/unraid-enhancedlog-2026.11.12.0000-noarch-1.txz
 
 # cleanup old versions
-rm -f $(ls /boot/config/plugins/enhanced.log/unraid-enhancedlog-*.txz 2>/dev/null | grep -v '2026.11.11.0000')
+rm -f $(ls /boot/config/plugins/enhanced.log/unraid-enhancedlog-*.txz 2>/dev/null | grep -v '2026.11.12.0000')
 
-echo "VERSION=2026.11.11.0000" > /usr/local/emhttp/plugins/enhanced.log/version.ini
+echo "VERSION=2026.11.12.0000" > /usr/local/emhttp/plugins/enhanced.log/version.ini
 
 echo ""
 echo "----------------------------------------------------"
 echo " enhanced.log has been installed."
-echo " Version: 2026.11.11.0000"
+echo " Version: 2026.11.12.0000"
 echo "----------------------------------------------------"
 echo ""
 ]]>
