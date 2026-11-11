@@ -124,6 +124,33 @@ DataTable.feature.register("pluginSelect", function (settings, opts) {
   return toolbar;
 });
 
+// ColumnControl builds its search lists from the "filter" render output, which is
+// HTML-escaped here, while DataTables compares against the decoded filter cache.
+// Supply the options ourselves (label escaped, value as the decoded filter text).
+// fields maps column name -> row property holding the filter text.
+function withSearchLists(fields) {
+  return function (json) {
+    if (!Array.isArray(json)) {
+      return json;
+    }
+    const options = {};
+    for (const [name, field] of Object.entries(fields)) {
+      const values = new Set(
+        json.map((row) => String(row[field] ?? "").replace(/[\r\n\u2028]/g, ""))
+      );
+      options[name] = [...values]
+        .sort((a, b) => a.localeCompare(b))
+        .map((value) => ({
+          label: DataTable.util.escapeHtml(value),
+          value: value,
+        }));
+    }
+    json.columnControl = options;
+    return json;
+  };
+}
+
+// Log content is attacker-controlled: DataTables renders cell values as HTML unless escaped.
 const columnSaving = {
   columns: {
     search: true,
@@ -143,7 +170,11 @@ function getDatatableConfig(url) {
   return {
     ajax: {
       url: url,
-      dataSrc: "",
+      dataSrc: withSearchLists({
+        source: "source",
+        service: "serviceFilter",
+        matchType: "matchType",
+      }),
     },
     order: [[0, "desc"]],
     columns: [
@@ -152,21 +183,21 @@ function getDatatableConfig(url) {
         data: null,
         type: "num",
         render: {
-          _: "date",
+          _: (data) => DataTable.util.escapeHtml(data.date),
           sort: "sequence",
         },
       },
-      { name: "source", data: "source" },
+      { name: "source", data: "source", render: DataTable.render.text() },
       {
         name: "service",
         data: null,
         render: {
-          _: "service",
-          filter: "serviceFilter",
+          _: (data) => DataTable.util.escapeHtml(data.service),
+          filter: (data) => DataTable.util.escapeHtml(data.serviceFilter),
         },
       },
-      { name: "message", data: "message" },
-      { name: "matchType", data: "matchType" },
+      { name: "message", data: "message", render: DataTable.render.text() },
+      { name: "matchType", data: "matchType", render: DataTable.render.text() },
     ],
     columnControl: {
       target: 0,
@@ -274,15 +305,19 @@ function getSummaryConfig(url) {
   return {
     ajax: {
       url: url,
-      dataSrc: "",
+      dataSrc: withSearchLists({
+        source: "source",
+        service: "service",
+        matchType: "matchType",
+      }),
     },
     order: [[0, "desc"]],
     columns: [
       { name: "count", data: "count" },
-      { name: "source", data: "source" },
-      { name: "service", data: "service" },
-      { name: "message", data: "message" },
-      { name: "matchType", data: "matchType" },
+      { name: "source", data: "source", render: DataTable.render.text() },
+      { name: "service", data: "service", render: DataTable.render.text() },
+      { name: "message", data: "message", render: DataTable.render.text() },
+      { name: "matchType", data: "matchType", render: DataTable.render.text() },
     ],
     columnControl: {
       target: 0,
@@ -391,7 +426,7 @@ function getPluginConfig(url) {
     order: [[0, "desc"]],
     columns: [
       { name: "sequence", data: "sequence" },
-      { name: "line", data: "line" },
+      { name: "line", data: "line", render: DataTable.render.text() },
     ],
     columnDefs: [
       {
