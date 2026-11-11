@@ -1,3 +1,7 @@
+# Vendored from https://github.com/dkaser/jinja2-action at commit 44d5cd5fe070d2b5c3fe5bb78a5fd6f8e695f11c (v1.4.0), the version the release action resolves through its @v1 tag.
+# Original author: Derek Kaser <11674153+dkaser@users.noreply.github.com>, who forked https://github.com/cuchi/jinja2-action by cuchi.
+# Local change: the Docker image is built from the Dockerfile in this directory instead of pulling docker://ghcr.io/dkaser/jinja2-action:33f5545. Commit 33f5545 differs from 44d5cd5 only in action.yml.
+# License: neither repository publishes a LICENSE file.
 name: "Jinja2 Action"
 description: "Use the Jinja2 templating engine on your workflow"
 inputs:
@@ -20,7 +24,7 @@ inputs:
     default: yaml
 runs:
   using: "docker"
-  image: "docker://ghcr.io/dkaser/jinja2-action:33f5545"
+  image: "Dockerfile"
 branding:
   icon: "sliders"
   color: "red"
