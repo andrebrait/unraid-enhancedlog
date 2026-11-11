@@ -124,6 +124,32 @@ DataTable.feature.register("pluginSelect", function (settings, opts) {
   return toolbar;
 });
 
+// ColumnControl builds its search lists from the "filter" render output, which is
+// HTML-escaped here, while DataTables compares against the decoded filter cache.
+// Supply the options ourselves (label escaped, value as the decoded filter text).
+// fields maps column name -> row property holding the filter text.
+function withSearchLists(fields) {
+  return function (json) {
+    if (!Array.isArray(json)) {
+      return json;
+    }
+    const options = {};
+    for (const [name, field] of Object.entries(fields)) {
+      const values = new Set(
+        json.map((row) => String(row[field] ?? "").replace(/[\r\n\u2028]/g, ""))
+      );
+      options[name] = [...values]
+        .sort((a, b) => a.localeCompare(b))
+        .map((value) => ({
+          label: DataTable.util.escapeHtml(value),
+          value: value,
+        }));
+    }
+    json.columnControl = options;
+    return json;
+  };
+}
+
 // Log content is attacker-controlled: DataTables renders cell values as HTML unless escaped.
 const columnSaving = {
   columns: {
@@ -144,7 +170,11 @@ function getDatatableConfig(url) {
   return {
     ajax: {
       url: url,
-      dataSrc: "",
+      dataSrc: withSearchLists({
+        source: "source",
+        service: "serviceFilter",
+        matchType: "matchType",
+      }),
     },
     order: [[0, "desc"]],
     columns: [
@@ -275,7 +305,11 @@ function getSummaryConfig(url) {
   return {
     ajax: {
       url: url,
-      dataSrc: "",
+      dataSrc: withSearchLists({
+        source: "source",
+        service: "service",
+        matchType: "matchType",
+      }),
     },
     order: [[0, "desc"]],
     columns: [
