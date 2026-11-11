@@ -29,15 +29,15 @@ use EDACerton\PluginUtils\Translator;
 
 require_once dirname(__FILE__) . "/include/common.php";
 
-$prefix = "/plugins/enhanced.log/data.php";
+$prefix = "/plugins/enhanced.log3/data.php";
 
 if ( ! defined(__NAMESPACE__ . '\PLUGIN_ROOT') || ! defined(__NAMESPACE__ . '\PLUGIN_NAME')) {
     throw new \RuntimeException("Common file not loaded.");
 }
 $tr = $tr ?? new Translator(PLUGIN_ROOT);
 
-$logger = new Logger('enhanced.log');
-$logger->pushHandler(new StreamHandler('/var/log/enhanced.log.slim.log', Level::Debug));
+$logger = new Logger('enhanced.log3');
+$logger->pushHandler(new StreamHandler('/var/log/enhanced.log3.slim.log', Level::Debug));
 
 $app = AppFactory::create();
 $app->addRoutingMiddleware();

@@ -1,6 +1,6 @@
-# Contributing to enhanced.log
+# Contributing to Enhanced Log v3
 
-Thank you for your interest in contributing to **enhanced.log**!
+Thank you for your interest in contributing to **Enhanced Log v3**!
 
 ## How to Contribute
 

@@ -1,5 +1,5 @@
-Menu="EnhancedSyslogSettings:1"
-Title="Configuration"
+Menu="EnhancedSyslogSettings:3"
+Title="Custom Match"
 Markdown="false"
 ---
 <?php
@@ -23,9 +23,9 @@ Markdown="false"
 
 try {
     $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-    require_once "{$docroot}/plugins/enhanced.log/include/page.php";
+    require_once "{$docroot}/plugins/enhanced.log3/include/page.php";
 
-    echo EDACerton\EnhancedLog\getPage("Configuration", true, array());
+    echo EDACerton\EnhancedLog\getPage("Custom", true, array());
 } catch (Throwable $e) {
     echo "An error occurred: <pre>" . print_r($e, true) . "</pre>";
 }

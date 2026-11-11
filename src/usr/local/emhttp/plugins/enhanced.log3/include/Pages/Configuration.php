@@ -43,7 +43,7 @@ if ( ! defined(__NAMESPACE__ . '\PLUGIN_NAME')) {
 
 <div style="width: 100%; float:left">
 	<form markdown="1" name="enhanced_log_settings" method="POST" action="/update.php" target="progressFrame">
-	<input type="hidden" name="#file" value="enhanced.log/enhanced.log.cfg">
+	<input type="hidden" name="#file" value="enhanced.log3/enhanced.log3.cfg">
 
 	<dl>
         <dt><?= $tr->tr("configuration.show_all_lines"); ?></dt>

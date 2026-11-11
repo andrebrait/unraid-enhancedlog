@@ -34,8 +34,8 @@ $colors->parseConfig($enhanced_log_cfg, true);
 
 ?>
 
-<script src="/plugins/enhanced.log/assets/jscolor.js"></script>
-<script src="/plugins/enhanced.log/assets/ac-colors.min.js"></script>
+<script src="/plugins/enhanced.log3/assets/jscolor.js"></script>
+<script src="/plugins/enhanced.log3/assets/ac-colors.min.js"></script>
 
 <script>
 // These options apply to all color pickers on the page
@@ -89,7 +89,7 @@ $(document).ready( async function () {
 
 <div style="width: 100%; float:left">
 	<form markdown="1" name="enhanced_log_settings" method="POST" action="/update.php" target="progressFrame">
-	<input type="hidden" name="#file" value="enhanced.log/enhanced.log.cfg">
+	<input type="hidden" name="#file" value="enhanced.log3/enhanced.log3.cfg">
 
     <dl>
         <dt><?= $tr->tr("colors.error"); ?></dt>

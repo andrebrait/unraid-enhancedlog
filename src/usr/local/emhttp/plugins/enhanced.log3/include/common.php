@@ -1,8 +1,6 @@
-Menu="EnhancedSyslogSettings:3"
-Title="Custom Match"
-Markdown="false"
----
 <?php
+
+namespace EDACerton\EnhancedLog;
 
 /*
     Copyright (C) 2025  Derek Kaser
@@ -21,11 +19,8 @@ Markdown="false"
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-try {
-    $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-    require_once "{$docroot}/plugins/enhanced.log/include/page.php";
+define(__NAMESPACE__ . "\PLUGIN_ROOT", dirname(dirname(__FILE__)));
+define(__NAMESPACE__ . "\PLUGIN_NAME", "enhanced.log3");
 
-    echo EDACerton\EnhancedLog\getPage("Custom", true, array());
-} catch (Throwable $e) {
-    echo "An error occurred: <pre>" . print_r($e, true) . "</pre>";
-}
+// @phpstan-ignore requireOnce.fileNotFound
+require_once "/usr/local/php/unraid-enhancedlog/vendor/autoload.php";

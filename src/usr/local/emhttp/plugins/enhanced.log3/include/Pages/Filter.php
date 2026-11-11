@@ -28,7 +28,7 @@ if ( ! defined(__NAMESPACE__ . '\PLUGIN_ROOT') || ! defined(__NAMESPACE__ . '\PL
 
 $tr = $tr ?? new Translator(PLUGIN_ROOT);
 
-$file = "/boot/config/plugins/enhanced.log/syslog_filter.conf";
+$file = "/boot/config/plugins/enhanced.log3/syslog_filter.conf";
 $text = @file_get_contents($file);
 ?>
 
@@ -59,7 +59,7 @@ Because the Syslog is very important for debugging issues, don't filter out entr
 
 	<dl><dt>&nbsp;</dt><dd>
 		<form name="apply_syslog_filter" method="POST" action="/update.php" target="progressFrame">
-			<input type="hidden" name="#command" value="/plugins/enhanced.log/scripts/rc.enhanced.log">
+			<input type="hidden" name="#command" value="/plugins/enhanced.log3/scripts/rc.enhanced.log3">
 			<span><input type="submit" value="<?= $tr->tr('apply'); ?>"><input type="button" value="<?= $tr->tr('done'); ?>" onclick="done()"></span>
 		</form>
 	</dd></dl>

@@ -26,26 +26,25 @@ try {
 
     $rows = "";
 
-    foreach ($logReader->getLogLines() as $sequence => $line) {
+    foreach ($logReader->getLogSummary() as $line) {
         $color = empty($line->getMatch()) ? "" : $colors->getColor($line->getMatch());
 
         if (strtolower($color) === "skip" || ! preg_match("/\w+/", $line->getMessage())) {
             continue;
         }
 
-        $service       = htmlspecialchars($line->getService());
-        $serviceFilter = htmlspecialchars($line->getServiceFilter());
-        $date          = htmlspecialchars($line->getDate());
-        $source        = htmlspecialchars($line->getSource());
-        $message       = htmlspecialchars($line->getMessage());
+        $service = htmlspecialchars($line->getService());
+        $count   = htmlspecialchars($line->getCount());
+        $source  = htmlspecialchars($line->getSource());
+        $message = htmlspecialchars($line->getMessage());
 
         $matchType = empty($line->getMatch()) ? "" : $colors->getColorName($line->getMatch(), $tr);
 
         $rows .= <<<EOT
             <tr style='background-color:{$color}'>
-                <td data-index="{$sequence}">{$date}</td>
+                <td>{$count}</td>
                 <td>{$source}</td>
-                <td data-text="{$serviceFilter}">{$service}</td>
+                <td>{$service}</td>
                 <td>{$message}</td>
                 <td>{$matchType}</td>
             </tr>
@@ -53,10 +52,10 @@ try {
     }
 
     $output = <<<EOT
-        <table id="logTable" class="unraid logTable">
+        <table id="hashTable" class="unraid hashTable">
             <thead>
                 <tr>
-                    <th>{$tr->tr("date")}</th>
+                    <th class="filter-false">{$tr->tr("count")}</th>
                     <th class="filter-onlyAvail">{$tr->tr("source")}</th>
                     <th class="filter-onlyAvail">{$tr->tr("service")}</th>
                     <th>{$tr->tr("message")}</th>
@@ -73,6 +72,6 @@ try {
     $rtn['html'] = $output;
     echo json_encode($rtn);
 } catch (\Throwable $e) {
-    file_put_contents("/var/log/enhanced.log-error.log", print_r($e, true) . PHP_EOL, FILE_APPEND);
+    file_put_contents("/var/log/enhanced.log3-error.log", print_r($e, true) . PHP_EOL, FILE_APPEND);
     echo "{}";
 }
