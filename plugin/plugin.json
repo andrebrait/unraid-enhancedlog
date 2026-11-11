@@ -2,7 +2,7 @@
     "name": "enhanced.log3",
     "replaces": "enhanced.log",
     "package_name": "unraid-enhancedlog",
-    "author": "Derek Kaser",
+    "author": "andrebrait",
     "min": "7.0.0",
     "icon": "align-left",
     "support": "https://github.com/andrebrait/unraid-enhancedlog/issues",
