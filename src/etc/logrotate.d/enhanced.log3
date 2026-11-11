@@ -1,4 +1,4 @@
-/var/log/enhanced.log.log {
+/var/log/enhanced.log3.log {
    compress
    daily
    rotate 4

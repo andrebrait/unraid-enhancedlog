@@ -33,7 +33,7 @@ $tr = $tr ?? new Translator(PLUGIN_ROOT);
 // Fix for black theme in Unraid 7.1 and earlier
 $vars = parse_ini_file('/usr/local/emhttp/state/var.ini');
 if (version_compare($vars['version'] ?? "", '7.1', '<=')) {
-    echo '<link type="text/css" rel="stylesheet" href="/plugins/enhanced.log/assets/style-7.1.css">';
+    echo '<link type="text/css" rel="stylesheet" href="/plugins/enhanced.log3/assets/style-7.1.css">';
 }
 
 $logs = Utils::getLogFiles();
@@ -66,19 +66,19 @@ const pluginFiles = <?= json_encode(
 ); ?>;
 </script>
 
-<script src="/plugins/enhanced.log/assets/translate.js"></script>
+<script src="/plugins/enhanced.log3/assets/translate.js"></script>
 <script>
-    const translator = new Translator("/plugins/enhanced.log");
+    const translator = new Translator("/plugins/enhanced.log3");
 </script>
 
-<link type="text/css" rel="stylesheet" href="/plugins/enhanced.log/assets/style.css">
-<script src="/plugins/enhanced.log/assets/datatables.js"></script>
-<script src="/plugins/enhanced.log/assets/luxon.min.js"></script>
-<script src="/plugins/enhanced.log/assets/flatpickr.min.js"></script>
-<link rel="stylesheet" href="/plugins/enhanced.log/assets/flatpickr.min.css">
+<link type="text/css" rel="stylesheet" href="/plugins/enhanced.log3/assets/style.css">
+<script src="/plugins/enhanced.log3/assets/datatables.js"></script>
+<script src="/plugins/enhanced.log3/assets/luxon.min.js"></script>
+<script src="/plugins/enhanced.log3/assets/flatpickr.min.js"></script>
+<link rel="stylesheet" href="/plugins/enhanced.log3/assets/flatpickr.min.css">
 
-<script src="/plugins/enhanced.log/assets/enhancedlog.js"></script>
-<link type="text/css" rel="stylesheet" href="/plugins/enhanced.log/assets/datatables.min.css">
+<script src="/plugins/enhanced.log3/assets/enhancedlog.js"></script>
+<link type="text/css" rel="stylesheet" href="/plugins/enhanced.log3/assets/datatables.min.css">
 
 <table id='logTable' class="stripe compact">
     <thead>
@@ -99,9 +99,9 @@ const pluginFiles = <?= json_encode(
 <script>
 $(document).ready( async function () {
     await translator.init();
-    $('#logTable').DataTable(getDatatableConfig('/plugins/enhanced.log/data.php/log'));
-    $('#summaryTable').DataTable(getSummaryConfig('/plugins/enhanced.log/data.php/summary'));
-    $('#pluginTable').DataTable(getPluginConfig('/plugins/enhanced.log/data.php/pluginLog'));
+    $('#logTable').DataTable(getDatatableConfig('/plugins/enhanced.log3/data.php/log'));
+    $('#summaryTable').DataTable(getSummaryConfig('/plugins/enhanced.log3/data.php/summary'));
+    $('#pluginTable').DataTable(getPluginConfig('/plugins/enhanced.log3/data.php/pluginLog'));
 } );
 
 <?php foreach ($colors->getColors() as $color) { ?>

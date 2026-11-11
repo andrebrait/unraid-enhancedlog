@@ -55,9 +55,9 @@ class LogReader
         $this->colors = new Colors();
         $this->colors->parseConfig($this->config);
 
-        $matchConfig = file('plugins/enhanced.log/syslog_match.conf') ?: array();
+        $matchConfig = file('plugins/enhanced.log3/syslog_match.conf') ?: array();
         if ($this->config['OTHER'] == "yes") {
-            $custom      = file('/boot/config/plugins/enhanced.log/custom_syslog.conf') ?: array();
+            $custom      = file('/boot/config/plugins/enhanced.log3/custom_syslog.conf') ?: array();
             $matchConfig = array_merge($custom, $matchConfig);
         }
 

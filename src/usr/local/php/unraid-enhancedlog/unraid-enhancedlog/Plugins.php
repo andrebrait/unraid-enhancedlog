@@ -27,7 +27,7 @@ class Plugins
 
     public function __construct()
     {
-        $this->utils = new Utils("enhanced.log");
+        $this->utils = new Utils("enhanced.log3");
         $this->files = $this->findLogFiles();
     }
 

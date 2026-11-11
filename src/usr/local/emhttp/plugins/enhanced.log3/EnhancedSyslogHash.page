@@ -1,5 +1,6 @@
-Menu="EnhancedSyslogSettings:4"
-Title="Syslog Filter"
+Menu="EnhancedLog:2"
+Title="Counts"
+Icon="align-left"
 Markdown="false"
 ---
 <?php
@@ -23,9 +24,9 @@ Markdown="false"
 
 try {
     $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
-    require_once "{$docroot}/plugins/enhanced.log/include/page.php";
+    require_once "{$docroot}/plugins/enhanced.log3/include/page.php";
 
-    echo EDACerton\EnhancedLog\getPage("Filter", true, array());
+    echo EDACerton\EnhancedLog\getPage("Hash", true, array());
 } catch (Throwable $e) {
     echo "An error occurred: <pre>" . print_r($e, true) . "</pre>";
 }

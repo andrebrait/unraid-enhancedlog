@@ -13,7 +13,7 @@
 
 <?
 $rsyslog_conf		= "/etc/rsyslog.conf";
-$file				= "/boot/config/plugins/enhanced.log/syslog_filter.conf";
+$file				= "/boot/config/plugins/enhanced.log3/syslog_filter.conf";
 $filter_file		= "/etc/rsyslog.d/02-blocklist-extra.conf";
 $escapeSequences	= array("'", '"');
 $file_contents		= str_replace($escapeSequences, "", @file_get_contents($file));

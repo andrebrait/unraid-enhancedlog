@@ -54,8 +54,8 @@ class Utils extends \EDACerton\PluginUtils\Utils
             throw new \RuntimeException("PLUGIN_ROOT not defined");
         }
 
-        $user_log_cfg       = parse_ini_file("/boot/config/plugins/enhanced.log/enhanced.log.cfg", false, INI_SCANNER_RAW) ?: array();
-        $default_log_config = parse_ini_file(PLUGIN_ROOT . "/default/enhanced.log.cfg", false, INI_SCANNER_RAW) ?: array();
+        $user_log_cfg       = parse_ini_file("/boot/config/plugins/enhanced.log3/enhanced.log3.cfg", false, INI_SCANNER_RAW) ?: array();
+        $default_log_config = parse_ini_file(PLUGIN_ROOT . "/default/enhanced.log3.cfg", false, INI_SCANNER_RAW) ?: array();
         $enhanced_log_cfg   = array_merge($default_log_config, $user_log_cfg);
 
         return $enhanced_log_cfg;

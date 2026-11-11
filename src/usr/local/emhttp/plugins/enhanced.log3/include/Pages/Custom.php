@@ -35,7 +35,7 @@ $tr = $tr ?? new Translator(PLUGIN_ROOT);
 </table>
  
 <?php
-$file = "/boot/config/plugins/enhanced.log/custom_syslog.conf";
+$file = "/boot/config/plugins/enhanced.log3/custom_syslog.conf";
 $text = @file_get_contents($file);
 ?>
 

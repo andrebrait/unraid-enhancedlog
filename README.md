@@ -1,4 +1,4 @@
-# enhanced.log – Enhanced Syslog Plugin for Unraid
+# Enhanced Log v3 – Enhanced Syslog Plugin for Unraid
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![GitHub Releases](https://img.shields.io/github/v/release/andrebrait/unraid-enhancedlog)](https://github.com/andrebrait/unraid-enhancedlog/releases)
@@ -16,10 +16,10 @@ This is a maintained fork of [dkaser/unraid-enhancedlog](https://github.com/dkas
 In the Unraid web UI, go to **Plugins → Install Plugin** and enter:
 
 ```
-https://raw.githubusercontent.com/andrebrait/unraid-enhancedlog/main/plugin/enhanced.log.plg
+https://raw.githubusercontent.com/andrebrait/unraid-enhancedlog/main/plugin/enhanced.log3.plg
 ```
 
-Installing over the original enhanced.log plugin keeps your settings.
+Installing replaces the previous Enhanced Log plugin (the original `enhanced.log`, or an earlier release of this fork) and keeps your settings. The plugin was renamed to `enhanced.log3` ("Enhanced Log v3") so Community Applications can tell it apart from the original.
 
 ### Requirements
 
@@ -31,7 +31,7 @@ Report bugs and feature requests in the [issue tracker of this fork](https://git
 
 ## Overview
 
-**enhanced.log** is a powerful syslog enhancement plugin for Unraid, providing advanced log filtering, colorization, categorization, and analytics. It helps users quickly identify important system events, troubleshoot issues, and customize log viewing to their needs.
+**Enhanced Log v3** is a powerful syslog enhancement plugin for Unraid, providing advanced log filtering, colorization, categorization, and analytics. It helps users quickly identify important system events, troubleshoot issues, and customize log viewing to their needs.
 
 ## Features
 
@@ -44,7 +44,7 @@ Report bugs and feature requests in the [issue tracker of this fork](https://git
 
 ## Configuration
 
-Configuration files are stored in `/boot/config/plugins/enhanced.log/`.  
+Configuration files are stored in `/boot/config/plugins/enhanced.log3/`.  
 
 ## Development
 
@@ -84,4 +84,4 @@ See [License.txt](License.txt) and [LICENSE](LICENSE) for details.
 
 ---
 
-For more information, see the [Unraid forums thread](https://forums.unraid.net/topic/43115-enhanced-log-view-with-lines-highlighted-in-color/) or open an issue on GitHub.
+For the history of the original plugin, see the [Unraid forums thread](https://forums.unraid.net/topic/43115-enhanced-log-view-with-lines-highlighted-in-color/). For support, open an issue in the [issue tracker of this fork](https://github.com/andrebrait/unraid-enhancedlog/issues).
