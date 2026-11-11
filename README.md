@@ -40,6 +40,8 @@ Configuration files are stored in `/boot/config/plugins/enhanced.log/`.
 
 1. Use the provided GitHub Actions workflow for release automation.
 
+Workflow actions use SHA-pinned versions of their latest available major releases. The custom release-drafter pin is retained because its conventional-commit changes are not on the upstream default branch. The PHP-CS-Fixer Docker action continues to track its `latest` image.
+
 ## Contributing
 
 Pull requests and issues are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines, including code checks, commit message conventions, and licensing. You can also open an issue to discuss your idea.
