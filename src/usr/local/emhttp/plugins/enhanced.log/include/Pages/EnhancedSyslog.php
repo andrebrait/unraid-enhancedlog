@@ -57,12 +57,12 @@ if (in_array($theme ?? "", $themeArray)) {
 <script>
 const logFiles = <?= json_encode(
     array_combine(array_map('basename', $logs), $logs),
-    JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG
 ); ?>;
 
 const pluginFiles = <?= json_encode(
     array_combine(array_map('basename', $pluginFiles), $pluginFiles),
-    JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG
 ); ?>;
 </script>
 

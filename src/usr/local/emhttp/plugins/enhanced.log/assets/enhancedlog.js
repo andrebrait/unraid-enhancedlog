@@ -124,6 +124,7 @@ DataTable.feature.register("pluginSelect", function (settings, opts) {
   return toolbar;
 });
 
+// Log content is attacker-controlled: DataTables renders cell values as HTML unless escaped.
 const columnSaving = {
   columns: {
     search: true,
@@ -152,21 +153,21 @@ function getDatatableConfig(url) {
         data: null,
         type: "num",
         render: {
-          _: "date",
+          _: (data) => DataTable.util.escapeHtml(data.date),
           sort: "sequence",
         },
       },
-      { name: "source", data: "source" },
+      { name: "source", data: "source", render: DataTable.render.text() },
       {
         name: "service",
         data: null,
         render: {
-          _: "service",
-          filter: "serviceFilter",
+          _: (data) => DataTable.util.escapeHtml(data.service),
+          filter: (data) => DataTable.util.escapeHtml(data.serviceFilter),
         },
       },
-      { name: "message", data: "message" },
-      { name: "matchType", data: "matchType" },
+      { name: "message", data: "message", render: DataTable.render.text() },
+      { name: "matchType", data: "matchType", render: DataTable.render.text() },
     ],
     columnControl: {
       target: 0,
@@ -279,10 +280,10 @@ function getSummaryConfig(url) {
     order: [[0, "desc"]],
     columns: [
       { name: "count", data: "count" },
-      { name: "source", data: "source" },
-      { name: "service", data: "service" },
-      { name: "message", data: "message" },
-      { name: "matchType", data: "matchType" },
+      { name: "source", data: "source", render: DataTable.render.text() },
+      { name: "service", data: "service", render: DataTable.render.text() },
+      { name: "message", data: "message", render: DataTable.render.text() },
+      { name: "matchType", data: "matchType", render: DataTable.render.text() },
     ],
     columnControl: {
       target: 0,
@@ -391,7 +392,7 @@ function getPluginConfig(url) {
     order: [[0, "desc"]],
     columns: [
       { name: "sequence", data: "sequence" },
-      { name: "line", data: "line" },
+      { name: "line", data: "line", render: DataTable.render.text() },
     ],
     columnDefs: [
       {
