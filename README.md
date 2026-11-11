@@ -1,11 +1,19 @@
-# Enhanced Log v3 – Enhanced Syslog Plugin for Unraid
+<div align="center">
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![GitHub Releases](https://img.shields.io/github/v/release/andrebrait/unraid-enhancedlog)](https://github.com/andrebrait/unraid-enhancedlog/releases)
-[![Last Commit](https://img.shields.io/github/last-commit/andrebrait/unraid-enhancedlog)](https://github.com/andrebrait/unraid-enhancedlog/commits/main/)
-[![Code Style: PHP-CS-Fixer](https://img.shields.io/badge/code%20style-php--cs--fixer-brightgreen.svg)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/andrebrait/unraid-enhancedlog/total)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/andrebrait/unraid-enhancedlog/latest/total)
+<img src="src/usr/local/emhttp/plugins/enhanced.log3/icons/enhanced.log3.png" alt="Enhanced Log v3 logo" width="96">
+
+<h1>Enhanced Log v3</h1>
+
+<p><strong>Advanced syslog filtering, colorization, and categorization for <a href="https://unraid.net/">Unraid</a>.</strong></p>
+
+<p>
+  <a href="https://github.com/andrebrait/unraid-enhancedlog/releases"><img src="https://img.shields.io/github/v/release/andrebrait/unraid-enhancedlog?label=release&color=blue" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/Unraid-7.0%2B-e8543f" alt="Supported Unraid versions">
+  <a href="https://github.com/andrebrait/unraid-enhancedlog/releases"><img src="https://img.shields.io/github/downloads/andrebrait/unraid-enhancedlog/total?color=blueviolet" alt="Downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/andrebrait/unraid-enhancedlog?color=green" alt="License: GPL-3.0"></a>
+</p>
+
+</div>
 
 ## Fork notice
 
