@@ -4,7 +4,7 @@
 <PLUGIN 
   name="enhanced.log3"
   author="andrebrait"
-  version="2026.11.15.0000"
+  version="2026.11.11.0000"
   launch="Tools/EnhancedSyslog"
   pluginURL="https://raw.githubusercontent.com/andrebrait/unraid-enhancedlog/main/plugin/enhanced.log3.plg"
   support="https://github.com/andrebrait/unraid-enhancedlog/issues"
@@ -16,27 +16,22 @@
 <CHANGES>
 <![CDATA[
 
-### 2026.11.15.0000
+### 2026.11.11.0000
 
-- The plugin is renamed to Enhanced Log v3 so Community Applications can tell it apart from the original. Installing it replaces the old plugin and keeps your settings.
-- The plugin's author is andrebrait, and its support link opens this fork's GitHub issues.
+Enhanced Log v3: a maintained fork by andrebrait of Derek Kaser's Enhanced Log v2, itself based on Dan Landon's original Enhanced Log.
 
-### 2026.11.13.0000
-
-- Build: releases are now produced with the andrebrait forks of the Unraid plugin release action and release drafter. No functional changes.
-
-### 2026.11.12.0000
-
-- Security: log text, sources and services are now escaped before display, so crafted syslog lines can no longer inject HTML or scripts into the Enhanced Log page.
+- Installing it replaces the Enhanced Log v2 plugin (enhanced.log) and keeps your settings, custom matches and syslog filters.
+- Security: log text, sources and services are escaped before display, so crafted syslog lines can no longer inject HTML or scripts into the Enhanced Log page.
+- Support: https://github.com/andrebrait/unraid-enhancedlog/issues
 
 
 For older releases, see https://github.com/andrebrait/unraid-enhancedlog/releases
 ]]>
 </CHANGES>
 
-<FILE Name="/boot/config/plugins/enhanced.log3/unraid-enhancedlog-2026.11.15.0000-noarch-1.txz">
-<URL>https://github.com/andrebrait/unraid-enhancedlog/releases/download/2026.11.15.0000/unraid-enhancedlog-2026.11.15.0000-noarch-1.txz</URL>
-<SHA256>4bc2dd846861d4991947300fd23c6d9aa42f59607bdd77073ac213f278ac6821</SHA256>
+<FILE Name="/boot/config/plugins/enhanced.log3/unraid-enhancedlog-2026.11.11.0000-noarch-1.txz">
+<URL>https://github.com/andrebrait/unraid-enhancedlog/releases/download/2026.11.11.0000/unraid-enhancedlog-2026.11.11.0000-noarch-1.txz</URL>
+<SHA256>593fc8bd8326eac22e23f2fab9c614648608ff6347b621276128aeb9c5b953b1</SHA256>
 </FILE>
 
 <!--
@@ -55,17 +50,17 @@ fi
 rm -f /boot/config/plugins/enhanced.log.plg /var/log/plugins/enhanced.log.plg
 rm -rf "$OLD" /usr/local/emhttp/plugins/enhanced.log
 
-upgradepkg --install-new /boot/config/plugins/enhanced.log3/unraid-enhancedlog-2026.11.15.0000-noarch-1.txz
+upgradepkg --install-new /boot/config/plugins/enhanced.log3/unraid-enhancedlog-2026.11.11.0000-noarch-1.txz
 
 # cleanup old versions
-rm -f $(ls /boot/config/plugins/enhanced.log3/unraid-enhancedlog-*.txz 2>/dev/null | grep -v '2026.11.15.0000')
+rm -f $(ls /boot/config/plugins/enhanced.log3/unraid-enhancedlog-*.txz 2>/dev/null | grep -v '2026.11.11.0000')
 
-echo "VERSION=2026.11.15.0000" > /usr/local/emhttp/plugins/enhanced.log3/version.ini
+echo "VERSION=2026.11.11.0000" > /usr/local/emhttp/plugins/enhanced.log3/version.ini
 
 echo ""
 echo "----------------------------------------------------"
 echo " enhanced.log3 has been installed."
-echo " Version: 2026.11.15.0000"
+echo " Version: 2026.11.11.0000"
 echo "----------------------------------------------------"
 echo ""
 ]]>
