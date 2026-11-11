@@ -1,6 +1,6 @@
 # Vendored from https://github.com/dkaser/unraid-plugin-release-action at commit 946d02c81dd87c252e5a06d18f3e74b2ecc401dc (v1.5.0).
 # Original author: Derek Kaser <11674153+dkaser@users.noreply.github.com>. Licensed under GPL-3.0; see LICENSE in this directory.
-# Local changes: nested actions pinned to commit SHAs; dkaser/jinja2-action is vendored in ../jinja2-action and referenced locally.
+# Local changes: nested actions pinned to commit SHAs; templates rendered by render_template.py instead of dkaser/jinja2-action, which publishes no license.
 name: "Release Unraid Plugin"
 description: "Builds and releases an Unraid plugin from a GitHub repository."
 inputs:
@@ -213,34 +213,34 @@ runs:
         asset_path: release/*
       if: steps.check_existing_package.outputs.skip_build != 'true' && inputs.build_package == 'true'
 
+    - name: Install Jinja2
+      run: |
+        python3 -m venv "$RUNNER_TEMP/jinja2"
+        "$RUNNER_TEMP/jinja2/bin/pip" install --quiet jinja2==3.1.6
+      shell: bash
+
     - name: Template plugin file
-      uses: ./.github/actions/jinja2-action
-      with:
-        template: main/plugin/plugin.j2
-        output_file: main/plugin/${{ steps.globals.outputs.name }}.plg
-        data_file: main/plugin/plugin.json
+      run: |
+        "$RUNNER_TEMP/jinja2/bin/python" "${{ github.action_path }}/render_template.py" main/plugin/plugin.j2 "main/plugin/${{ steps.globals.outputs.name }}.plg" --data main/plugin/plugin.json
+      shell: bash
       env:
         PLUGIN_VERSION: ${{ inputs.plugin_version }}
         PLUGIN_CHECKSUM: ${{ steps.check_existing_package.outputs.checksum || steps.build_files.outputs.checksum }}
         PLUGIN_CHANGELOG: ${{ steps.get_previous_releases.outputs.formatted_releases }}
         PLUGIN_RELEASE: ""
         PLUGIN_TAG: ${{ github.event.release.tag_name }}
-        GITHUB_CONTEXT: ${{ toJson(github) }}
       if: github.event.release.prerelease == false
 
     - name: Template preview plugin file
-      uses: ./.github/actions/jinja2-action
-      with:
-        template: main/plugin/plugin.j2
-        output_file: main/plugin/${{ steps.globals.outputs.name }}-preview.plg
-        data_file: main/plugin/plugin.json
+      run: |
+        "$RUNNER_TEMP/jinja2/bin/python" "${{ github.action_path }}/render_template.py" main/plugin/plugin.j2 "main/plugin/${{ steps.globals.outputs.name }}-preview.plg" --data main/plugin/plugin.json
+      shell: bash
       env:
         PLUGIN_VERSION: ${{ inputs.plugin_version }}
         PLUGIN_CHECKSUM: ${{ steps.check_existing_package.outputs.checksum || steps.build_files.outputs.checksum }}
         PLUGIN_CHANGELOG: ${{ steps.get_previous_releases.outputs.formatted_releases }}
         PLUGIN_RELEASE: "-preview"
         PLUGIN_TAG: ${{ github.event.release.tag_name }}
-        GITHUB_CONTEXT: ${{ toJson(github) }}
       if: inputs.build_prereleases == 'true'
 
     - name: Commit and push plugin files
