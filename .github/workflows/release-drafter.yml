@@ -15,10 +15,18 @@ jobs:
       pull-requests: read
     runs-on: ubuntu-latest
     steps:
-      # Calculate version string in format YYYY.MM.DD
+      # Version is today's UTC date (YYYY.MM.DD); later releases on the same day get .1, .2, ...
       - name: Set version string
         id: set_version
-        run: TZ=UTC date +'%Y.%m.%d' | xargs -I{} echo "version={}" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DAY=$(TZ=UTC date +'%Y.%m.%d')
+          export DAY
+          suffix=$(gh release list --repo "$GITHUB_REPOSITORY" --exclude-drafts --limit 100 --json tagName --jq \
+            '[.[].tagName | select(. == env.DAY or startswith(env.DAY + ".")) | ltrimstr(env.DAY) | ltrimstr(".") | if . == "" then 0 else tonumber end]
+             | if length == 0 then "" else ".\(max + 1)" end')
+          echo "version=${DAY}${suffix}" >> "$GITHUB_ENV"
 
       - uses: andrebrait/release-drafter@8bc802e5816eff4cc92ae7ce2a6f5f09c284bf0d
         with:
