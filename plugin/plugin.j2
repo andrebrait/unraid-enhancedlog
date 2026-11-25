@@ -21,8 +21,8 @@ For older releases, see https://github.com/{{ env['GITHUB_REPOSITORY'] }}/releas
 ]]>
 </CHANGES>
 
-<FILE Name="/boot/config/plugins/{{ name }}/{{ package_name }}-{{ env['PLUGIN_VERSION'] }}-noarch-1.txz">
-<URL>https://github.com/{{ env['GITHUB_REPOSITORY'] }}/releases/download/{{ env['PLUGIN_VERSION'] }}/{{ package_name }}-{{ env['PLUGIN_VERSION'] }}-noarch-1.txz</URL>
+<FILE Name="/boot/config/plugins/{{ name }}/{{ env['PLUGIN_PACKAGE_FILE'] }}">
+<URL>https://github.com/{{ env['GITHUB_REPOSITORY'] }}/releases/download/{{ env['PLUGIN_TAG'] }}/{{ env['PLUGIN_PACKAGE_FILE'] }}</URL>
 <SHA256>{{ env['PLUGIN_CHECKSUM'] }}</SHA256>
 </FILE>
 
@@ -42,10 +42,10 @@ fi
 rm -f /boot/config/plugins/{{ replaces }}.plg /var/log/plugins/{{ replaces }}.plg
 rm -rf "$OLD" /usr/local/emhttp/plugins/{{ replaces }}
 
-upgradepkg --install-new /boot/config/plugins/{{ name }}/{{ package_name }}-{{ env['PLUGIN_VERSION'] }}-noarch-1.txz
+upgradepkg --install-new /boot/config/plugins/{{ name }}/{{ env['PLUGIN_PACKAGE_FILE'] }}
 
 # cleanup old versions
-rm -f $(ls /boot/config/plugins/{{ name }}/{{ package_name }}-*.txz 2>/dev/null | grep -v '{{ env['PLUGIN_VERSION'] }}')
+rm -f $(ls /boot/config/plugins/{{ name }}/{{ package_name }}-*.txz 2>/dev/null | grep -v '{{ env['PLUGIN_PACKAGE_FILE'] }}')
 
 echo "VERSION={{ env['PLUGIN_VERSION'] }}" > /usr/local/emhttp/plugins/{{ name }}/version.ini
 
